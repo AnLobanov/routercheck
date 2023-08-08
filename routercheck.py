@@ -19,10 +19,10 @@ except ModuleNotFoundError:  # Paramiko not installed by default
         os.system('clear')
 
 # SERVER ACCESS
-HOST = '127.0.0.1' # IP or domain
-USER = 'anton' # Username
-PSWD = '2212' # Password
-PATH = '/home/anton/test' # Directory with backups
+HOST = '' # IP or domain
+USER = '' # Username
+PSWD = '' # Password
+PATH = '' # Directory with backups
   
 FAIL = '\033[91m'  # Colors for terminal
 ENDC = '\033[0m'
