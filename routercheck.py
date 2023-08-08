@@ -19,10 +19,10 @@ except ModuleNotFoundError:  # Paramiko not installed by default
         os.system('clear')
 
 # SERVER ACCESS
-HOST = '' # IP or domain
-USER = '' # Username
-PSWD = '' # Password
-PATH = '' # Directory with backups
+HOST = '127.0.0.1' # IP or domain
+USER = 'anton' # Username
+PSWD = '2212' # Password
+PATH = '/home/anton/test' # Directory with backups
   
 FAIL = '\033[91m'  # Colors for terminal
 ENDC = '\033[0m'
@@ -66,11 +66,14 @@ for ip in sftp.listdir(PATH):
     if filePath != '' and filePath not in lastbackups:  # Avoid repeats
         lastbackups.append([ip, filePath])
 while True:
+    register = False
     try:
         SRCH = input('\nSearch request: ')
     except KeyboardInterrupt:
         print()
         sys.exit(0)
+    if re.fullmatch('".+"', SRCH):
+        register = True
     for backup in lastbackups:
         with sftp.open(backup[1]) as file:
             hostname = ''
@@ -81,8 +84,15 @@ while True:
                 if 'hostname' in line and not found:  # Search for hostname or request
                     hostname = line.replace('hostname ', '').replace('\n', '')
                     found = True
-                if SRCH in line:
-                    if found:
-                        print(backup[0], hostname, 'Ln:' + str(lineNum), backup[1])
-                    else:
-                        print(backup[0], FAIL +  'Hostname_not_found' + ENDC, 'Ln:' + str(lineNum), backup[1])
+                if register:
+                    if SRCH in line:
+                        if found:
+                            print(backup[0], hostname, 'Ln:' + str(lineNum), backup[1])
+                        else:
+                            print(backup[0], FAIL +  'Hostname_not_found' + ENDC, 'Ln:' + str(lineNum), backup[1])
+                else:
+                    if SRCH.lower() in line.lower():
+                        if found:
+                            print(backup[0], hostname, 'Ln:' + str(lineNum), backup[1])
+                        else:
+                            print(backup[0], FAIL +  'Hostname_not_found' + ENDC, 'Ln:' + str(lineNum), backup[1])
